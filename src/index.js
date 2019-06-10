@@ -1,19 +1,32 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 const path = require('path');
+//const XRay = require('aws-xray-sdk');
 
 // Constants
-const PORT = process.env.PORT || 8080;
-const HOST = '0.0.0.0';
+// const PORT = process.env.PORT || 8080;
+// const HOST = '0.0.0.0';
 
 const CLIENT_BUILD_PATH = path.join(__dirname, '../../client/build');
 
 // App
 const app = express();
 
+
+
+
 // Static files
 app.use(express.static(CLIENT_BUILD_PATH));
+
+// AWS X-Ray
+//app.use(XRay.express.openSegment('getCall'));
+
+// Cors
+app.use(cors({
+    origin: 'http://bas-c.s3-website-us-west-1.amazonaws.com'
+  }));
 
 // API
 app.get('/api', (req, res) => {
@@ -23,11 +36,13 @@ app.get('/api', (req, res) => {
   };
   res.send(JSON.stringify(data, null, 2));
 });
+//app.use(XRay.express.closeSegment('getCall'));
 
 // All remaining requests return the React app, so it can handle routing.
 app.get('*', function(request, response) {
   response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
 });
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+
+// app.listen(PORT, HOST);
+// console.log(`Running on http://${HOST}:${PORT}`);

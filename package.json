@@ -10,6 +10,8 @@
   "author": "Peter Coles",
   "license": "MIT",
   "dependencies": {
+    "aws-xray-sdk": "^2.3.3",
+    "cors": "^2.8.5",
     "express": "^4.16.2"
   },
   "devDependencies": {
