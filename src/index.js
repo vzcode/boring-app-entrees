@@ -2,6 +2,7 @@
 
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 
 // Constants
 const PORT = process.env.PORT || 8080;
@@ -9,11 +10,17 @@ const HOST = '0.0.0.0';
 
 // const CLIENT_BUILD_PATH = path.join(__dirname, '../../client/build');
 
+
 // App
 const app = express();
 
 // Static files
 // app.use(express.static(CLIENT_BUILD_PATH));
+
+// Cors
+app.use(cors({
+  origin: 'http://bas-c.s3-website-us-west-1.amazonaws.com'
+}));
 
 // API
 app.get('/api', (req, res) => {
