@@ -6,16 +6,12 @@ const path = require('path');
 //const XRay = require('aws-xray-sdk');
 
 // Constants
-// const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 // const HOST = '0.0.0.0';
-
 const CLIENT_BUILD_PATH = path.join(__dirname, '../../client/build');
 
 // App
 const app = express();
-
-
-
 
 // Static files
 app.use(express.static(CLIENT_BUILD_PATH));
@@ -25,7 +21,7 @@ app.use(express.static(CLIENT_BUILD_PATH));
 
 // Cors
 app.use(cors({
-    origin: 'http://bas-c.s3-website-us-west-1.amazonaws.com'
+    origin: 'http://bas-c.s3-website-us-west-1.amazonaws.com/'
   }));
 
 // API
@@ -44,5 +40,5 @@ app.get('*', function(request, response) {
 });
 
 
-// app.listen(PORT, HOST);
-// console.log(`Running on http://${HOST}:${PORT}`);
+//app.listen(PORT, HOST);
+console.log(`Running on port: ${PORT}`);
