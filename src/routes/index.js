@@ -1,7 +1,6 @@
 const express = require('express');
-const AWS = require('aws-sdk');
 const AWSXray = require('aws-xray-sdk');
- 
+const AWS = AWSXray.captureAWS(require('aws-sdk'));
 
 const config = require('../config/config');
 var isDev = process.env.NODE_ENV !== 'production';
@@ -14,7 +13,7 @@ AWSXray.config([AWSXray.plugins.EC2Plugin]);
 console.log(`This is the local env: ${isDev}`);
 
 // Health Check
-router.use(AWSXray.express.openSegment('entreesApiHealth'));
+//router.use(AWSXray.express.openSegment('entreesApiHealth'));
 router.get('/', (req, res) => {
     res.set('Content-Type', 'application/json');
     let data = {
@@ -22,9 +21,9 @@ router.get('/', (req, res) => {
     };
     res.send(JSON.stringify(data, null, 2));
 })
-router.use(AWSXray.express.closeSegment());
+//router.use(AWSXray.express.closeSegment());
 
-router.use(AWSXray.express.openSegment('getEntrees'));
+//router.use(AWSXray.express.openSegment('getEntrees'));
 router.get('/entrees', (req, res, next) => {
     
     isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
@@ -51,9 +50,9 @@ router.get('/entrees', (req, res, next) => {
             }
         })}
 );
-router.use(AWSXray.express.closeSegment());
+//router.use(AWSXray.express.closeSegment());
 
-router.use(AWSXray.express.openSegment('addEntree'));
+//router.use(AWSXray.express.openSegment('addEntree'));
 
 router.post('/add-entree', (req, res, next) => {
 
@@ -90,7 +89,7 @@ router.post('/add-entree', (req, res, next) => {
         }
     });
 });
-router.use(AWSXray.express.closeSegment());
+//router.use(AWSXray.express.closeSegment());
 
 
 module.exports = router;
