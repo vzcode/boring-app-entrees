@@ -14,7 +14,7 @@ XRay.config([XRay.plugins.EC2Plugin]);
 console.log(`This is the local env: ${isDev}`);
 
 // Health Check
-app.use(XRay.express.openSegment('entreesApiHealth'));
+router.use(XRay.express.openSegment('entreesApiHealth'));
 router.get('/', (req, res) => {
     res.set('Content-Type', 'application/json');
     let data = {
@@ -22,9 +22,9 @@ router.get('/', (req, res) => {
     };
     res.send(JSON.stringify(data, null, 2));
 })
-app.use(XRay.express.closeSegment());
+router.use(XRay.express.closeSegment());
 
-app.use(XRay.express.openSegment('getEntrees'));
+router.use(XRay.express.openSegment('getEntrees'));
 router.get('/entrees', (req, res, next) => {
     
     isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
@@ -51,9 +51,9 @@ router.get('/entrees', (req, res, next) => {
             }
         })}
 );
-app.use(XRay.express.closeSegment());
+router.use(XRay.express.closeSegment());
 
-app.use(XRay.express.openSegment('addEntree'));
+router.use(XRay.express.openSegment('addEntree'));
 
 router.post('/add-entree', (req, res, next) => {
 
@@ -90,7 +90,7 @@ router.post('/add-entree', (req, res, next) => {
         }
     });
 });
-app.use(XRay.express.closeSegment());
+router.use(XRay.express.closeSegment());
 
 
 module.exports = router;
