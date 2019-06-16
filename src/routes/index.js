@@ -1,14 +1,11 @@
 const express = require('express');
-const AWSXray = require('aws-xray-sdk');
-const AWS = AWSXray.captureAWS(require('aws-sdk'));
-
 const config = require('../config/config');
 var isDev = process.env.NODE_ENV !== 'production';
 isDev = false;
 const router = express.Router();
 const app = express();
 
-AWSXray.config([AWSXray.plugins.EC2Plugin]);
+//AWSXray.config([AWSXray.plugins.EC2Plugin]);
 
 console.log(`This is the local env: ${isDev}`);
 
