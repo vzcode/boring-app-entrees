@@ -4,11 +4,14 @@ const XRay = require('aws-xray-sdk');
  
 
 const config = require('../config/config');
-const isDev = process.env.NODE_ENV !== 'production';
+var isDev = process.env.NODE_ENV !== 'production';
+isDev = false;
 const router = express.Router();
 const app = express();
 
 XRay.config([XRay.plugins.EC2Plugin]);
+
+console.log(`This is the local env: ${isDev}`);
 
 // Health Check
 app.use(XRay.express.openSegment('entreesApiHealth'));
