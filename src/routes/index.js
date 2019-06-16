@@ -59,7 +59,7 @@ router.post('/add-entree', (req, res, next) => {
 
     isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
     
-    const { name, description } = req.query;
+    const { entree, description } = req.query;
    
     const entreeId = (Math.random() * 1000).toString();
     const docClient = new AWS.DynamoDB.DocumentClient();
@@ -68,7 +68,7 @@ router.post('/add-entree', (req, res, next) => {
         TableName: config.aws_table_name,
         Item: {
             'entreeId': entreeId,
-            'name': name,
+            'entree': entree,
             'description': description
         }
     };
