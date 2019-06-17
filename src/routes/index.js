@@ -1,10 +1,10 @@
 const express = require('express');
 const AWS = require('aws-sdk');
+const AWSXray = require('aws-xray-sdk');
 const config = require('../config/config');
 var isDev = process.env.NODE_ENV !== 'production';
 isDev = false;
 const router = express.Router();
-const app = express();
 
 //AWSXray.config([AWSXray.plugins.EC2Plugin]);
 
@@ -13,11 +13,14 @@ console.log(`This is the local env: ${isDev}`);
 // Health Check
 //router.use(AWSXray.express.openSegment('entreesApiHealth'));
 router.get('/', (req, res) => {
-    res.set('Content-Type', 'application/json');
-    let data = {
-        message: 'API: Up'
-    };
-    res.send(JSON.stringify(data, null, 2));
+    AWSXray.captureFunc('entreesApiHealth', function (subsegment) {
+        res.set('Content-Type', 'application/json');
+        let data = {
+            message: 'API: Up'
+        };
+        res.send(JSON.stringify(data, null, 2));
+        subsegment.close();
+    });
 })
 //router.use(AWSXray.express.closeSegment());
 

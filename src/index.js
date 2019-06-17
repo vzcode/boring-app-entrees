@@ -2,7 +2,6 @@
 const express = require('express');
 // const cors = require('cors');
 const AWSXray = require('aws-xray-sdk');
-const AWS = AWSXray.captureAWS(require('aws-sdk'));
 const app = express();
 const bodyParser = require('body-parser');
 const routes = require('./routes');
