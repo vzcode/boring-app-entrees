@@ -49,7 +49,7 @@ router.get('/entrees', (req, res, next) => {
 
 
 router.post('/add-entree', (req, res, next) => {
-    AWSXray.captureFunc('getEntrees', function (subsegment) {
+    AWSXray.captureFunc('addEntrees', function (subsegment) {
         isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
         
         const { entree, description } = req.query;
