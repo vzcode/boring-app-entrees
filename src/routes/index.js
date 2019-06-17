@@ -11,7 +11,6 @@ const router = express.Router();
 console.log(`This is the local env: ${isDev}`);
 
 // Health Check
-//router.use(AWSXray.express.openSegment('entreesApiHealth'));
 router.get('/', (req, res) => {
     AWSXray.captureFunc('entreesApiHealth', function (subsegment) {
         res.set('Content-Type', 'application/json');
@@ -22,26 +21,24 @@ router.get('/', (req, res) => {
         subsegment.close();
     });
 })
-//router.use(AWSXray.express.closeSegment());
 
-//router.use(AWSXray.express.openSegment('getEntrees'));
 router.get('/entrees', (req, res, next) => {
-    
-    isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
+    AWSXray.captureFunc('getEntrees', function (subsegment) {
+        isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
 
-    const docClient = new AWS.DynamoDB.DocumentClient();
+        const docClient = new AWS.DynamoDB.DocumentClient();
 
-    const params = {
-        TableName: config.aws_table_name
-    }
+        const params = {
+            TableName: config.aws_table_name
+        }
 
-    docClient.scan(params, function(err,data) {
-        if (err) {
-            res.send({
-                success: false,
-                message: 'Error: Server error'
-            });
-        } else {
+        docClient.scan(params, function(err,data) {
+            if (err) {
+                res.send({
+                    success: false,
+                    message: 'Error: Server error'
+                });
+            } else {
                 const { Items } = data;
                 res.send({ 
                     success: true,
@@ -49,48 +46,50 @@ router.get('/entrees', (req, res, next) => {
                     entrees: Items
                 });
             }
-        })}
-);
-//router.use(AWSXray.express.closeSegment());
+        })
+    subsegment.close();
+    })
+});
 
 //router.use(AWSXray.express.openSegment('addEntree'));
 
 router.post('/add-entree', (req, res, next) => {
-
-    isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
+    AWSXray.captureFunc('getEntrees', function (subsegment) {
+        isDev ? AWS.config.update(config.aws_local_config) : AWS.config.update(config.aws_remote_config);
+        
+        const { entree, description } = req.query;
     
-    const { entree, description } = req.query;
-   
-    const entreeId = (Math.random() * 1000).toString();
-    const docClient = new AWS.DynamoDB.DocumentClient();
-    
-    const params = {
-        TableName: config.aws_table_name,
-        Item: {
-            'entreeId': entreeId,
-            'entree': entree,
-            'description': description
-        }
-    };
-    docClient.put(params, function (err, data) {
-        console.log(req.body);
-        if (err) {
-            res.send({
-                success: false,
-                message: 'Error: Can not add item'
-            });
-        } else {
-            console.log('data', data);
-            const { Items } = data;
-            res.send({
-                success: true,
-                message: 'Added entree',
-                entreeId: entreeId
-            });
-        }
+        const entreeId = (Math.random() * 1000).toString();
+        const docClient = new AWS.DynamoDB.DocumentClient();
+        
+        const params = {
+            TableName: config.aws_table_name,
+            Item: {
+                'entreeId': entreeId,
+                'entree': entree,
+                'description': description
+            }
+        };
+        docClient.put(params, function (err, data) {
+            console.log(req.body);
+            if (err) {
+                res.send({
+                    success: false,
+                    message: 'Error: Can not add item'
+                });
+            } else {
+                console.log('data', data);
+                const { Items } = data;
+                res.send({
+                    success: true,
+                    message: 'Added entree',
+                    entreeId: entreeId
+                });
+            }
+        });
+        subsegment.close(); 
     });
 });
-//router.use(AWSXray.express.closeSegment());
 
 
 module.exports = router;
