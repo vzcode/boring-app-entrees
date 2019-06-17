@@ -6,10 +6,6 @@ var isDev = process.env.NODE_ENV !== 'production';
 isDev = false;
 const router = express.Router();
 
-//AWSXray.config([AWSXray.plugins.EC2Plugin]);
-
-console.log(`This is the local env: ${isDev}`);
-
 // Health Check
 router.get('/', (req, res) => {
     AWSXray.captureFunc('entreesApiHealth', function (subsegment) {
@@ -51,7 +47,6 @@ router.get('/entrees', (req, res, next) => {
     })
 });
 
-//router.use(AWSXray.express.openSegment('addEntree'));
 
 router.post('/add-entree', (req, res, next) => {
     AWSXray.captureFunc('getEntrees', function (subsegment) {
