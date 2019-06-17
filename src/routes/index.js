@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     AWSXray.captureFunc('entreesApiHealth', function (subsegment) {
         res.set('Content-Type', 'application/json');
         let data = {
-            message: 'API: Up'
+            message: 'Entree API: Up'
         };
         res.send(JSON.stringify(data, null, 2));
         subsegment.close();
