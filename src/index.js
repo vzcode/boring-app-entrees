@@ -1,12 +1,15 @@
 'use strict';
 const express = require('express');
-// const cors = require('cors');
+const cors = require('cors');
 const AWSXray = require('aws-xray-sdk');
 const app = express();
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 const PORT = process.env.PORT || 8080;
 app.use(bodyParser.json());
+app.use(cors({
+  origin: 'http://bas-c.s3-website-us-west-1.amazonaws.com'
+}));
 app.use(AWSXray.express.openSegment('Entree Service'));
 app.use('/', routes);
 app.use(AWSXray.express.closeSegment());
