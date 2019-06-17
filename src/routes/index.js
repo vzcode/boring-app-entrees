@@ -1,6 +1,6 @@
 const express = require('express');
-const AWS = require('aws-sdk');
 const AWSXray = require('aws-xray-sdk');
+const AWS = AWSXray.captureAWS(require('aws-sdk'));
 const config = require('../config/config');
 var isDev = process.env.NODE_ENV !== 'production';
 isDev = false;
