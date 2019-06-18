@@ -3,7 +3,7 @@ const router = express.Router();
 const AWSXray = require('aws-xray-sdk');
 
 router.get('/entrees', require('./entrees'))
-router.post('/add-entrees', require('./entrees'))
+// router.post('/add-entrees', require('./entrees'))
 
 // Health Check
 router.get('/', (req, res) => {
